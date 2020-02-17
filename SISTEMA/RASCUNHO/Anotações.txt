@@ -1,0 +1,144 @@
+DALL 
+
+Conexão 
+using System;
+using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ProjetoLogin.DALL
+{
+    public class Conexao
+    {
+        SqlConnection con = new SqlConnection();
+        //Metodo para conectar com o banco de dados 
+        public Conexao()
+        {
+            con.ConnectionString = @"";
+        }
+        // Metodo de conectar no banco de dados 
+        public SqlConnection conectar()
+        {
+            if(con.State == System.Data.ConnectionState.Closed)
+            {
+                con.Open();
+            }
+            return con;
+        }
+        //metodo de desconectar do banco de dados 
+        public void desconctar()
+        {
+            if(con.State == System.Data.ConnectionState.Open)
+            {
+                con.Close();
+            }
+        }
+    }
+}
+
+Login Dao comandos 
+using System;
+using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ProjetoLogin.DALL
+{
+    class LoginDalComandos
+    {
+        public bool tem = false;
+        public string mensagem = "";
+
+        SqlCommand cmd = new SqlCommand();
+        Conexao con = new Conexao();
+        SqlDataReader dr;
+        public bool verificarlogin(String login,String senha)// Esse metodo serve para ir no banco de dados e ver se realmene existe o e-mail e login cadastrado
+        {
+            //Comando Sql para verificar se tem no banco 
+            cmd.CommandText = "select * from nomeDataTabela where email = @login and senha = @senha";
+            cmd.Parameters.AddWithValue("@login", login);
+            cmd.Parameters.AddWithValue("@Senha", senha);
+
+            try
+            {
+                cmd.Connection = con.conectar();
+                dr = cmd.ExecuteReader();
+                if (dr.HasRows)
+                {
+                    tem = true;
+                }
+            }
+            catch (SqlException)
+            {
+                this.mensagem = "Erro com o Banco de dado ";
+            }
+            return tem;
+        }
+
+MODELO 
+
+using ProjetoLogin.DALL;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ProjetoLogin.Modelo
+{
+    public class Controle
+    {
+        public bool tem;
+        public String mensagem = "";
+        private string senha;
+
+        public bool acessar(String login, String Senha)
+        {
+            LoginDalComandos loginDal = new LoginDalComandos();
+            tem = loginDal.verificarlogin(login, senha);
+            if (!loginDal.mensagem.Equals(""))
+            {
+                this.mensagem = loginDal.mensagem;
+            }
+            return tem;
+        }
+        public string cadastrar(String email, String senha, String confSenha)
+        {
+            return mensagem;
+        }
+    }
+}
+
+
+       
+
+        public string cadastrar(String email,String senha, String confSenha)//Metodo para cadastrar no banco
+        {
+            //Comando para inserir no banco
+            return mensagem;
+        }
+    }
+}
+================================================================================================================================================================
+12/12/2019
+Alterar o banco de dados na tabela produtos e acrescentar a coluna "Pesquisar Produto" => Feito 
+
+13/12/2019
+Usar modelo de 3 camadas assistir video pra auxiliar 
+  
+1- Fazer uma tela de Login para entrar no sistema
+* Irá logar e chamar a tela de cadastro 
+ 
+2- Fazer uma tela de Cadastro de Produto:
+* Inserir 
+* Deletar
+* Excluir
+* Alterar 
+* Editar
+* Pesquisar produto  
+
+3-Criar tabela Login e Senha no banco de Dados Gerenciamento
